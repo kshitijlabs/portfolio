@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# kshitijlabs portfolio
 
-## Getting Started
+Personal portfolio of Kshitij K, Senior .NET Full-Stack Engineer.
+Next.js (static export) · TypeScript · Tailwind CSS · Motion · hosted on GitHub Pages.
 
-First, run the development server:
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # static site in ./out
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The boot intro plays once per browser tab. To see it again, open a new tab
+or run `sessionStorage.clear()` in the browser console and refresh.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Edit content
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Everything visitors read is in `src/content/`:
 
-## Learn More
+| File | What it holds |
+|---|---|
+| `site.ts` | Name, contact, hero text, stats, About |
+| `projects.ts` | Case studies and their architecture diagrams |
+| `career.ts` | Stack, experience, FAQ |
 
-To learn more about Next.js, take a look at the following resources:
+Project screenshots go in `public/work/` and are referenced with `image: "/work/name.webp"`.
+To show the résumé link, add `public/resume.pdf` and set `resumeUrl: asset("/resume.pdf")` in `site.ts`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy to GitHub Pages
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Create a public repository on GitHub. Name it **`kshitijlabs.github.io`** to get
+   `https://kshitijlabs.github.io`, or use any name to get `https://kshitijlabs.github.io/<name>`.
+   The build adapts to either automatically.
+2. Push the contents of this folder to the repository's `main` branch.
+3. In the repository: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+4. The workflow in `.github/workflows/deploy.yml` builds and publishes on every push to `main`.
+   Watch it under the **Actions** tab; the live URL appears on the finished run.

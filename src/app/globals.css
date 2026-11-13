@@ -1,26 +1,397 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ---------- Tokens: light is the default ---------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #efede7;
+  --paper-2: #e5e2da;
+  --card: #f8f7f3;
+  --ink: #1a1916;
+  --muted: #6a665e;
+  --rule: #d3cec3;
+  --ok: #23804a;
+  --accent: #512bd4; /* .NET violet */
+  --accent-soft: #a28dff;
+  --pet-2: #a28dff; /* dino plates and belly */
+  --on-accent: #ffffff;
+  --term: #151412;
+  --term-2: #1f1d1a;
+  --term-ink: #e8e4da;
+  --term-dim: #8a857b;
+  --term-ok: #5fd08a;
+  --shadow: 0 30px 60px -32px rgb(26 25 22 / 0.38);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --paper: #12110f;
+  --paper-2: #191815;
+  --card: #1c1b18;
+  --ink: #ece8df;
+  --muted: #958f84;
+  --rule: #2f2d28;
+  --ok: #4cc27a;
+  --accent: #a28dff;
+  --pet-2: #6b4fe6;
+  --on-accent: #12110f;
+  --term: #0b0a09;
+  --term-2: #171513;
+  --shadow: 0 30px 60px -30px rgb(0 0 0 / 0.75);
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-ok: var(--ok);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-pet-2: var(--pet-2);
+  --color-on-accent: var(--on-accent);
+  --color-term: var(--term);
+  --color-term-2: var(--term-2);
+  --color-term-ink: var(--term-ink);
+  --color-term-dim: var(--term-dim);
+  --color-term-ok: var(--term-ok);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --shadow-float: var(--shadow);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ---------- Base ---------- */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+/* ---------- Components ---------- */
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+  }
+  @media (min-width: 768px) {
+    .container-x {
+      padding-left: max(40px, env(safe-area-inset-left, 0px));
+      padding-right: max(40px, env(safe-area-inset-right, 0px));
+    }
+  }
+  .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 14px 17px;
+    border-radius: 5px;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .btn-solid {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-solid:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+  .status-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    flex: none;
+    border-radius: 999px;
+    background: var(--ok);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--ok) 22%, transparent);
+  }
+  .kbd {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+    border: 1px solid var(--rule);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    padding: 4px 7px;
+    background: var(--card);
+    color: var(--ink);
+  }
+  .dotted-lead {
+    flex: 1 1 12px;
+    min-width: 10px;
+    border-bottom: 1px dotted var(--muted);
+    transform: translateY(-4px);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ---------- Scroll reveal: CSS only, content stays visible without support ---------- */
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+
+/* ---------- Boot loader ---------- */
+.boot {
+  display: none;
+}
+html.booting .boot {
+  display: flex;
+  /* Failsafe: if JavaScript never runs, get out of the way */
+  animation: boot-failsafe 0s linear 6s forwards;
+}
+html.booting body {
+  overflow: hidden;
+}
+@keyframes boot-failsafe {
+  to {
+    visibility: hidden;
+  }
+}
+.boot.is-lift {
+  transform: translateY(-101%);
+}
+.boot.is-fade {
+  opacity: 0;
+}
+@keyframes boot-line {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.boot-line {
+  animation: boot-line 0.2s ease-out both;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+.boot-caret {
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+/* ---------- Personal greeting: hide the placeholder when a name is coming ---------- */
+html[data-visitor] .greet-placeholder {
+  visibility: hidden;
+}
+
+/* ---------- Custom cursor (CursorTrail adds the class on mouse devices only) ---------- */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+html.has-custom-cursor :is(input, textarea, [contenteditable="true"], [data-native-cursor]) {
+  cursor: text !important;
+}
+
+/* ---------- Architecture diagram: live request trace ---------- */
+.arch-node rect {
+  transition: fill 0.25s, stroke-width 0.25s;
+}
+.arch-node[data-on] rect {
+  fill: color-mix(in oklab, var(--accent) 14%, var(--card));
+  stroke: var(--accent);
+  stroke-width: 2.4;
+}
+.arch-packet {
+  transition: opacity 0.2s;
+}
+.arch-packet-dot {
+  fill: var(--accent);
+}
+.arch-packet-halo {
+  fill: var(--accent);
+  opacity: 0.18;
+}
+.arch-packet[data-back] .arch-packet-dot,
+.arch-packet[data-back] .arch-packet-halo {
+  fill: var(--ok);
+}
+
+/* ---------- Page transitions (React <ViewTransition>) ---------- */
+::view-transition-group(.morph) {
+  animation-duration: 480ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: via-blur;
+}
+@keyframes via-blur {
+  35% {
+    filter: blur(2px);
+  }
+}
+::view-transition-old(root) {
+  animation: 180ms ease-out both vt-fade-out;
+}
+::view-transition-new(root) {
+  animation: 320ms ease-out 80ms both vt-fade-in;
+}
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* ---------- Theme toggle icons (no state needed, no hydration mismatch) ---------- */
+[data-theme="dark"] .icon-when-light,
+:root:not([data-theme="dark"]) .icon-when-dark {
+  display: none;
+}
+
+/* ---------- Command menu (cmdk) ---------- */
+.cmdk-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgb(10 9 8 / 0.45);
+  backdrop-filter: blur(3px);
+}
+.cmdk-content {
+  position: fixed;
+  z-index: 61;
+  top: 14vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(560px, calc(100vw - 32px));
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+[cmdk-input] {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  padding: 16px 18px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+}
+[cmdk-input]::placeholder {
+  color: var(--muted);
+}
+[cmdk-list] {
+  max-height: min(380px, 60vh);
+  overflow: auto;
+  padding: 8px;
+}
+[cmdk-group-heading] {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 10px 10px 6px;
+}
+[cmdk-item] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 7px;
+  font-size: 14px;
+  cursor: pointer;
+}
+[cmdk-item][data-selected="true"] {
+  background: color-mix(in oklab, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+[cmdk-empty] {
+  padding: 18px 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
