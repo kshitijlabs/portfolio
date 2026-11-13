@@ -52,9 +52,7 @@ export const site = {
 
   stats: [
     { value: "5+ yrs", label: "shipping .NET and React" },
-    { value: "4.2M", label: "SKUs in one catalog" },
     { value: "20+", label: "enterprise clients supported" },
-    { value: "2×", label: "Employee of the Year" },
   ],
 
   about: [
