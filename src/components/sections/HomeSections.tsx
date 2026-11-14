@@ -3,6 +3,7 @@ import { projects } from "@/content/projects";
 import { experience, faq, stackGroups } from "@/content/career";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { CopyEmailButton } from "@/components/ui/CopyEmailButton";
+import { ResumeButton } from "@/components/ui/ResumeButton";
 import { StatusBar } from "@/components/layout/StatusBar";
 import { WorkList } from "./WorkList";
 
@@ -93,40 +94,25 @@ export function Stack() {
 export function Experience() {
   return (
     <section id="experience" className={section}>
-      <SectionHeader index="004" title="Experience" meta="Open a row for details" />
-      <div className="reveal">
-        {experience.map((job, i) => (
-          <details key={job.company} open={i === 0} className="group border-b border-rule">
-            <summary className="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_24px] items-baseline gap-x-4 gap-y-0.5 py-5 md:grid-cols-[130px_minmax(0,1fr)_minmax(0,1fr)_24px] [&::-webkit-details-marker]:hidden">
-              <span className="font-mono text-xs tabular-nums text-muted">{job.years}</span>
-              <span className="col-start-1 font-display text-[clamp(20px,2.2vw,25px)] font-bold leading-tight tracking-[-0.02em] md:col-auto">
-                {job.company}
-              </span>
-              <span className="col-start-1 text-sm text-muted md:col-auto">{job.role}</span>
-              <span
-                aria-hidden="true"
-                className="col-start-2 row-span-3 row-start-1 self-center text-right font-mono text-base text-muted transition-transform group-open:rotate-45 group-open:text-accent md:col-auto md:row-auto"
-              >
-                +
-              </span>
-            </summary>
-            <div className="pb-6 md:pl-[146px]">
-              <ul className="max-w-[70ch] list-disc space-y-1 pl-5 text-sm text-muted marker:text-rule">
-                {job.points.map((p) => (
-                  <li key={p}>{p}</li>
-                ))}
-              </ul>
-              <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Technologies">
-                {job.tags.map((t) => (
-                  <li key={t} className="rounded-full border border-rule px-2.5 py-0.5 font-mono text-[10.5px] text-muted">
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </details>
+      <SectionHeader index="004" title="Experience" meta="Details in the résumé" />
+      <ol className="reveal">
+        {experience.map((job) => (
+          <li
+            key={job.company}
+            className="grid gap-y-0.5 border-b border-rule py-5 md:grid-cols-[130px_minmax(0,1fr)_minmax(0,1fr)] md:items-baseline md:gap-x-4"
+          >
+            <span className="font-mono text-xs tabular-nums text-muted">{job.years}</span>
+            <span className="font-display text-[clamp(20px,2.2vw,25px)] font-bold leading-tight tracking-[-0.02em]">
+              {job.company}
+            </span>
+            <span className="text-sm text-muted">{job.role}</span>
+            <p className="mt-1.5 max-w-[70ch] text-sm leading-relaxed text-muted md:col-span-2 md:col-start-2 md:mt-1">
+              {job.summary}
+            </p>
+          </li>
         ))}
-      </div>
+      </ol>
+      <ResumeButton label="[ Full résumé ↗ ]" className="mt-6" />
 
       <div className="mt-20 grid gap-8 md:grid-cols-[minmax(0,.8fr)_minmax(0,2fr)]">
         <h3 className="font-display text-[clamp(38px,5vw,62px)] font-[750] leading-[0.95] tracking-[-0.04em]">
@@ -180,10 +166,10 @@ export function Contact() {
             <a
               href={site.resumeUrl}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="border-b border-rule pb-0.5 hover:border-accent hover:text-accent"
             >
-              Résumé PDF ↗
+              Résumé ↗
             </a>
           </li>
         )}

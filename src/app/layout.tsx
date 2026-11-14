@@ -33,7 +33,7 @@ export const viewport: Viewport = {
 };
 
 // Runs before first paint:
-// 1. restores the saved theme,
+// 1. restores the saved theme (light unless the visitor picked dark),
 // 2. decides whether this browser session still needs the boot intro,
 // 3. reads a personal greeting from ?to=Name (letters, spaces, . ' - only; max 24),
 //    remembers it for the session and exposes it as <html data-visitor>.

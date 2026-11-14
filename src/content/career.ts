@@ -28,35 +28,30 @@ export const stackGroups = [
   },
   {
     title: "AI",
-    tag: "Gen AI",
-    items: ["LLM API integration (Gemini)", "Prompt engineering", "GitHub Copilot", "Claude Code"],
+    tag: "Agents",
+    items: [
+      "Claude Code · Codex · GitHub Copilot",
+      "AI agents · tool calling · agentic workflows",
+      "RAG · embeddings · vector search",
+      "LLM APIs (Gemini) · prompt engineering",
+    ],
   },
 ] as const;
 
+// Kept to one line per job on purpose: the details live in the résumé (site.resumeUrl).
 export const experience = [
   {
     years: "2021 – now",
     company: "Amla Commerce",
     role: "Software Engineer",
-    points: [
-      "Technical lead for the 4.2M-SKU catalog go-live, the Znode platform's largest deployment; cut product list pages from minutes to 6 seconds.",
-      "Restored the customer's highest-value order path by re-engineering the TradeCentric MultiCart integration, resolving an 80% rejection rate on $20K+ bulk orders.",
-      "Closed an unrestricted file-upload vulnerability in the PO document endpoint with allowlist-based validation.",
-      "Shipped HawkSearch REST APIs in Znode v9x (90% client adoption) and an Epicor CPQ Vision integration with a 3D in-browser configurator.",
-      "Built the inventory and pricing sync between a 40K-SKU catalog and four ERPs, and collapsed a 4-hour weekly job plus a nightly delta into one 45-minute pipeline.",
-      "Own production observability for about 2 P1 incidents a week across 20+ enterprise clients: structured logging, API tracing, Application Insights and New Relic, database-level RCA.",
-      "Built GitHub Actions CI/CD across Dev, Stage and Production for two customer projects, with no rollback-triggering deployments. Mentored 5+ engineers through code review.",
-    ],
-    tags: [".NET Core", "React", "SQL Server", "Azure", "Znode", "GitHub Actions", "Employee of the Year ×2"],
+    summary:
+      "Building and running enterprise B2B commerce end to end: .NET APIs, React storefronts, SQL Server and Azure, from first commit to production support.",
   },
   {
     years: "Jun 2020",
     company: "Cojag Smart Technology",
     role: "Intern",
-    points: [
-      "Built a responsive web app that gathered IIT entrance-prep material in one place for 50+ students, improving access to resources by 40%.",
-    ],
-    tags: ["HTML", "CSS", "Bootstrap"],
+    summary: "Built a responsive web app that brought study material together in one place for students.",
   },
 ];
 
@@ -75,6 +70,6 @@ export const faq = [
   },
   {
     q: "Do you use AI tools?",
-    a: "Every day. GitHub Copilot and Claude Code while coding, and the Gemini API inside tools I build, like AI Ticket Insights.",
+    a: "Every day, on both sides. Claude Code and Codex as coding agents, Copilot in the editor. And inside what I build: RAG over real company data and LLM-backed tools like AI Ticket Insights.",
   },
 ];

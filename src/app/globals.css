@@ -308,6 +308,30 @@ html.has-custom-cursor :is(input, textarea, [contenteditable="true"], [data-nati
   }
 }
 
+/* ---------- Hero backdrop: dot grid, dots near the cursor light up ---------- */
+.hero-dots {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(circle, color-mix(in oklab, var(--ink) 20%, transparent) 1px, transparent 1.6px);
+  background-size: 22px 22px;
+  background-position: center top;
+  /* fade out before the Work section so the content below stays plain */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+}
+.hero-dots::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--accent) 1.4px, transparent 2px);
+  background-size: 22px 22px;
+  background-position: center top;
+  -webkit-mask-image: radial-gradient(170px circle at var(--mx, -999px) var(--my, -999px), #000, transparent);
+  mask-image: radial-gradient(170px circle at var(--mx, -999px) var(--my, -999px), #000, transparent);
+}
+
 /* ---------- Theme toggle icons (no state needed, no hydration mismatch) ---------- */
 [data-theme="dark"] .icon-when-light,
 :root:not([data-theme="dark"]) .icon-when-dark {

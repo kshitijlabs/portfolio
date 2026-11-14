@@ -147,35 +147,43 @@ export const projects: Project[] = [
     title: "AI Ticket Insights",
     scope: "AI",
     kind: "Internal",
-    stack: ["Python", "FastAPI", "React", "Gemini API"],
+    stack: ["Python", "FastAPI", "React", "Gemini API", "RAG"],
     summary:
-      "A company-wide, LLM-powered platform that turns ticket data into root-cause analysis, resolution steps and key learnings.",
+      "A company-wide AI platform that turns ticket data into root-cause analysis, resolution steps and key learnings, and remembers how similar issues were solved before.",
     variant: 4,
     facts: [
       ["Used by", "Product, launch and support teams"],
       ["Stack", "Python (FastAPI), React, Gemini API"],
       ["Sources", "Freshdesk API, Jira API"],
+      ["Memory", "RAG over closed tickets and past searches"],
     ],
     problem:
-      "Ticket history sat in Freshdesk and Jira, and triage depended on who picked a ticket up. Teams needed a faster, consistent way to find the root cause and the fix.",
+      "Ticket history sat in Freshdesk and Jira, and triage depended on who picked a ticket up. The same issues kept coming back, and the fix from last time was buried in an old ticket that nobody remembered.",
     architecture: {
       nodes: [
         { id: "ui", title: "React app", sub: "teams' dashboard", col: 0, row: 0, hot: true },
         { id: "api", title: "FastAPI service", sub: "Python", col: 1, row: 0, hot: true },
-        { id: "llm", title: "Gemini API", sub: "RCA · steps · learnings", col: 2, row: 0, hot: true },
+        { id: "kb", title: "Knowledge store", sub: "RAG · past cases", col: 2, row: 0, hot: true },
+        { id: "llm", title: "Gemini API", sub: "RCA · steps · learnings", col: 3, row: 0, hot: true },
         { id: "fd", title: "Freshdesk API", sub: "tickets", col: 1, row: 1 },
         { id: "jira", title: "Jira API", sub: "issues", col: 2, row: 1 },
       ],
       edges: [
         { from: "ui", to: "api", label: "REST", hot: true },
-        { from: "api", to: "llm", label: "prompt", hot: true },
+        { from: "api", to: "kb", label: "similar?", hot: true },
+        { from: "kb", to: "llm", label: "+ context", hot: true },
         { from: "api", to: "fd", label: "fetch" },
         { from: "api", to: "jira", label: "fetch" },
       ],
-      caption: "Ticket data is pulled from where it already lives, then summarised by the model.",
-      trace: { request: "POST /tickets/{id}/insights", response: "RCA · next steps · learnings" },
+      caption:
+        "Before the model answers, the service retrieves similar closed tickets and past searches, so the analysis starts from what already worked.",
+      trace: { request: "POST /tickets/{id}/insights", response: "RCA · steps · learnings, plus similar past cases" },
     },
     decisions: [
+      {
+        title: "Give the model a memory.",
+        body: "Closed tickets and earlier searches are stored and retrieved (RAG), so when an issue looks like one solved before, the AI agent sees that case and its fix as context instead of starting from zero.",
+      },
       {
         title: "Three outputs per ticket.",
         body: "Every analysis returns a root cause, resolution steps and key learnings, so answers look the same no matter who asks.",

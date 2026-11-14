@@ -28,8 +28,9 @@ export const site = {
     { label: "LinkedIn", href: "https://www.linkedin.com/in/kshitij-kolhe" },
     { label: "GitHub", href: "https://github.com/kshitijlabs" },
   ],
-  // Put the PDF in /public and set this to asset("/resume.pdf") to show the link.
-  resumeUrl: null as string | null,
+  // Google Drive share link (Share → General access → Anyone with the link → Viewer).
+  // While this is null, every résumé button and link stays hidden.
+  resumeUrl: "https://drive.google.com/drive/folders/1Gz2QtgU9_oc_-gnmnybk-R8RoJycESsQ?usp=sharing" as string | null,
   description:
     "Full-stack software engineer with 5+ years building secure, scalable enterprise applications in C#/.NET, React, SQL Server and Azure.",
 
@@ -46,7 +47,7 @@ export const site = {
     ["Data", "SQL Server · MongoDB · Elasticsearch"],
     ["Frontend", "React · TypeScript · Next.js"],
     ["Cloud", "Azure · GitHub Actions"],
-    ["AI", "Gemini API · LLM tooling"],
+    ["AI", "Claude Code · Codex · Agents · RAG"],
     ["Experience", "5+ years"],
   ] as const,
 

@@ -75,7 +75,7 @@ type Mark = { id: string; label: string; x: number };
 /** Where on the track (px from the left) a scroll progress of p puts the dino. */
 const trackX = (p: number) => 6 + p * (window.innerWidth - W - 12);
 
-type Bubble = { text: string; align: "left" | "center" | "right" } | null;
+type Bubble = string | null;
 
 const reducedQuery = "(prefers-reduced-motion: reduce)";
 const subscribeReduced = (cb: () => void) => {
@@ -105,6 +105,7 @@ export function PixelDino() {
   const strideRef = useRef<SVGGElement>(null);
   const eyeRef = useRef<SVGRectElement>(null);
   const shadowRef = useRef<HTMLDivElement>(null);
+  const bubbleRef = useRef<HTMLSpanElement>(null);
   const api = useRef<{ poke: () => void; hover: (on: boolean) => void } | null>(null);
 
   // Section flags along the ground line (home page only).
@@ -180,9 +181,7 @@ export function PixelDino() {
     const say = (text: string | null, ms = 2600) => {
       clearTimeout(bubbleTimer);
       if (!text) return setBubble(null);
-      const vw = window.innerWidth;
-      const align = x < 90 ? "left" : x > vw - W - 90 ? "right" : "center";
-      setBubble({ text, align });
+      setBubble(text);
       if (ms > 0) bubbleTimer = window.setTimeout(() => setBubble(null), ms);
     };
     const jump = (power = 560) => {
@@ -283,6 +282,17 @@ export function PixelDino() {
       const s = Math.max(0.4, 1 - y / 120);
       shadow.style.transform = `translateX(-50%) scale(${s.toFixed(2)})`;
       shadow.style.opacity = s.toFixed(2);
+
+      // Keep the speech bubble on screen when the dino is near an edge.
+      const b = bubbleRef.current;
+      if (b) {
+        const shift = parseFloat(b.style.marginLeft) || 0;
+        const r = b.getBoundingClientRect();
+        const left = r.left - shift;
+        const right = r.right - shift;
+        const next = left < 8 ? 8 - left : right > window.innerWidth - 8 ? window.innerWidth - 8 - right : 0;
+        if (Math.abs(next - shift) > 0.5) b.style.marginLeft = `${next.toFixed(1)}px`;
+      }
 
       raf = requestAnimationFrame(tick);
     };
@@ -400,16 +410,10 @@ export function PixelDino() {
         <div ref={jumpRef} className="relative">
           {bubble && (
             <span
-              className={
-                "absolute bottom-full mb-2 whitespace-nowrap rounded-md bg-ink px-2.5 py-1.5 font-mono text-[11px] leading-none text-paper shadow-float " +
-                (bubble.align === "left"
-                  ? "left-0"
-                  : bubble.align === "right"
-                    ? "right-0"
-                    : "left-1/2 -translate-x-1/2")
-              }
+              ref={bubbleRef}
+              className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-ink px-2.5 py-1.5 font-mono text-[11px] leading-none text-paper shadow-float"
             >
-              {bubble.text}
+              {bubble}
             </span>
           )}
           <button
