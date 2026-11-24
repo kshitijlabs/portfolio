@@ -96,6 +96,73 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "3d-bar-configurator",
+    title: "3D Bar Configurator",
+    scope: "Full-stack",
+    kind: "Client",
+    stack: [".NET", "SQL Server", "Hangfire", "TypeScript", "KBMax CPQ"],
+    summary:
+      "Embedded a third-party 3D configurator in a Znode storefront so customers can design a custom bar, save it to project folders, share it, and get spec and quote documents generated in the background.",
+    variant: 3,
+    facts: [
+      ["Role", "Sole developer, database to front end"],
+      ["Platform", "Znode e-commerce, B2B and B2C"],
+      ["Configurator", "KBMax CPQ · 3D, embedded"],
+      ["Jobs", "Hangfire, persisted job state"],
+    ],
+    problem:
+      "A commercial bar-equipment manufacturer wanted dealers, designers and end customers to lay out a custom underbar visually and keep those designs in one place. The vendor's configurator handled 3D rendering and pricing rules, but nothing tied a design to a storefront account. There were no folders or sharing, guests had no way in, and generating the spec documents was slow and blocked the request.",
+    architecture: {
+      nodes: [
+        { id: "ui", title: "Storefront", sub: "TypeScript · Razor", col: 0, row: 0, hot: true },
+        { id: "web", title: "WebStore MVC", sub: "Controller → Agent", col: 1, row: 0, hot: true },
+        { id: "api", title: "Web API", sub: "Service · ownership", col: 2, row: 0, hot: true },
+        { id: "sql", title: "SQL Server", sub: "20+ procs · 5 tables", col: 3, row: 0, hot: true },
+        { id: "cfg", title: "KBMax configurator", sub: "3D iframe · SDK", col: 0, row: 1 },
+        { id: "jobs", title: "Hangfire jobs", sub: "submit · poll · email", col: 2, row: 1 },
+        { id: "kbmax", title: "KBMax REST API", sub: "quotes · spec files", col: 3, row: 1 },
+      ],
+      edges: [
+        { from: "ui", to: "web", label: "save", hot: true },
+        { from: "web", to: "api", label: "Ocelot", hot: true },
+        { from: "api", to: "sql", label: "procs", hot: true },
+        { from: "ui", to: "cfg", label: "postMessage", dashed: true },
+        { from: "api", to: "jobs", label: "enqueue" },
+        { from: "jobs", to: "kbmax", label: "poll" },
+      ],
+      caption:
+        "Accent line = saving a design. The configurator lives in an iframe and talks to the page by postMessage; slow document generation runs off the request in Hangfire.",
+      trace: { request: "POST /designs · configured-product JSON", response: "saved to My Designs · project folder" },
+    },
+    decisions: [
+      {
+        title: "Talk to the iframe, don't own it.",
+        body: "The vendor's 3D configurator runs in an isolated iframe. The page sends a save command over postMessage, the configurator runs its rules and returns the configured-product JSON, and the storefront persists it. The same page handles new, existing, copied, shared and locked designs, and warns about unsaved changes.",
+      },
+      {
+        title: "Move documents off the request.",
+        body: "Spec and quote documents can take minutes, so they run as a Hangfire workflow: submit, poll once a minute, download, email. Job and file state live in SQL tables, so status survives restarts, and the UI polls and auto-downloads a ZIP when it's ready. Generated files are cached to cut repeat calls to the vendor API.",
+      },
+      {
+        title: "Send the email exactly once.",
+        body: "A claim step guarantees one success email per job, and a unique index stops duplicate jobs; the duplicate-key error is handled, not thrown. A custom Autofac JobActivator gives background jobs a lifetime scope and a synthetic HttpContext, so request-scoped platform services work off the request thread.",
+      },
+      {
+        title: "Never trust an ID from the browser.",
+        body: "Every update, move, delete and share checks ownership on the server. Public URLs carry encrypted, opaque tokens, share links are revocable GUIDs, and the vendor endpoints and credentials resolve server-side only. Login-popup messages are checked against the page origin.",
+      },
+      {
+        title: "Keep the guest's work.",
+        body: "Guests can design with just an email. The design is saved locked and the documents are emailed. A guest can also sign in mid-design through a popup without losing anything, and on registration a stored procedure merges their guest designs into the new account.",
+      },
+    ],
+    results: [
+      { value: "20+", label: "stored procedures, 5 custom tables" },
+      { value: "7", label: "layers touched, DB to admin portal" },
+      { value: "1×", label: "success email per job, guaranteed" },
+    ],
+  },
+  {
     slug: "multicart-order-recovery",
     title: "MultiCart Order Recovery",
     scope: "Integration",
